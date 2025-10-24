@@ -227,6 +227,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 caption = f"✅ Верно! Вы нашли слово: {normalized_text}\n📍 Адрес: {point['address']}"
                 if(len(point['photo_path'])>0):
                     await send_with_photo(update, point['photo_path'], caption)
+                else:
+                    await update.message.reply_text(caption)
 
                 # Отправляем рекламное сообщение
                 if(len(point['ad_message'])>0):
