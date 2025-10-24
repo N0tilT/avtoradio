@@ -82,6 +82,12 @@ QUEST_POINTS = {
         'hint': 'Подсказка: То, что нужно автомобилю и человеку',
         'ad_message': '«Местный» https://vk.com/mestniy_restoran_tver — это рестобар Твери, в сердце спального района Южный, который создан для тех, кто ценит камерную атмосферу, вкусную кухню и душевные посиделки.\nКомплексный обед в «Местном» – всего за 550 ₽!',
         'photo_path': "Logo_AvtoRadio/Местный.jpg"
+    },
+    'ПЛОЩАДКА': {
+        'address': 'Улица Коминтерна, 8 (слева от здания) ',
+        'hint': 'Подсказка: Место тренировки в автошколе',
+        'ad_message': '',
+        'photo_path': ""
     }
 }
 
@@ -219,10 +225,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 # Отправляем информацию о точке с фото
                 caption = f"✅ Верно! Вы нашли слово: {normalized_text}\n📍 Адрес: {point['address']}"
-                await send_with_photo(update, point['photo_path'], caption)
+                if(len(point['photo_path'])>0):
+                    await send_with_photo(update, point['photo_path'], caption)
 
                 # Отправляем рекламное сообщение
-                await update.message.reply_text(point['ad_message'])
+                if(len(point['ad_message'])>0):
+                    await update.message.reply_text(point['ad_message'])
 
                 # Проверяем, завершен ли квест
                 if check_all_words_found(user_id):
