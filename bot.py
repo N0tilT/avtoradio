@@ -239,10 +239,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 if len(get_user_state(user_id)['found_words'])+3 == len(QUEST_POINTS):
                     time.sleep(3)
                     await update.message.reply_text(FINAL_MESSAGE)
-
-
-                # Проверяем, завершен ли квест
-                if check_all_words_found(user_id):
+                elif check_all_words_found(user_id):
                     time.sleep(3)
                     user_state['finished'] = True
                     finish_time = datetime.now()
@@ -253,7 +250,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                     logger.info(f"User {user_id} finished the quest in {duration}")
                 else:
-                    remaining = len(QUEST_POINTS) - len(user_state['found_words'])
+                    remaining = len(QUEST_POINTS) - len(user_state['found_words'])-3
                     await update.message.reply_text(
                         f"🎯 Отлично! Осталось найти {remaining} слов.\n"
                         f"Продолжайте в том же духе!"
