@@ -86,7 +86,7 @@ QUEST_POINTS = {
     'ПЛОЩАДКА': {
         'address': 'Улица Коминтерна, 8 (слева от здания) ',
         'hint': 'Подсказка: Место тренировки в автошколе',
-        'ad_message': '',
+        'ad_message': 'Спасибо нашему партнёру "Площадка на Коминтерна, 8"!',
         'photo_path': ""
     }
 }
@@ -302,7 +302,7 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE):
         user_state = get_user_state(user_id)
 
         found_count = len(user_state['found_words'])
-        total_count = len(QUEST_POINTS)
+        total_count = len(QUEST_POINTS) -3
 
         progress_text = f"📊 Ваш прогресс:\n\n"
         progress_text += f"✅ Найдено слов: {found_count}/{total_count}\n"
@@ -314,7 +314,7 @@ async def show_progress(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 progress_text += f"• {word}\n"
 
         if found_count < total_count:
-            remaining = total_count - found_count
+            remaining = total_count - found_count 
             progress_text += f"\n🎯 Осталось найти: {remaining} слов"
 
         await update.message.reply_text(progress_text)
@@ -334,6 +334,7 @@ async def show_partners(update: Update, context: ContextTypes.DEFAULT_TYPE):
             partner_name = lines[0] if lines else f"Партнер {i}"
             partners_text += f"• {partner_name}\n"
 
+        partners_text += f'• Спасибо нашему партнеру "Компьютерная Академия Топ"\nhttps://vk.com/ittoptver\n'
         partners_text += "\n🔍 Посетите точки партнеров, чтобы найти кодовые слова!"
 
         await update.message.reply_text(partners_text)
