@@ -93,6 +93,7 @@ QUEST_POINTS = {
 
 # Финальное сообщение
 FINAL_MESSAGE = """🎉 Поздравляем! Вы собрали все кодовые слова и завершили автоквест «Территория Авторадио»!
+   Для завершения осталось ввести последнее слово - финиш.
 
 🏆 Вы — настоящий герой города!
 
@@ -129,7 +130,7 @@ def get_user_state(user_id):
 def check_all_words_found(user_id):
     """Проверить, найдены ли все слова"""
     user_state = get_user_state(user_id)
-    return len(user_state['found_words']) == len(QUEST_POINTS)
+    return len(user_state['found_words'])+2 == len(QUEST_POINTS)
 
 
 async def send_with_photo(update: Update, photo_path: str, caption: str):
@@ -165,13 +166,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         start_message = """Приветствуем на «Территории Авторадио» — твоём ключе к интересным и драйвовым местам города! 
 
-🎯 Ваша задача: собрать 12 кодовых слов, посещая партнеров Авторадио.
+🎯 Ваша задача: собрать 9 кодовых слов, посещая партнеров Авторадио.
 
 📍 Посещайте точки в любом порядке
 🔍 Вводите кодовые слова, которые найдете на местах
 🎁 Получайте подарки от партнеров
 
-Введи первое кодовое слово:"""
+Введи первое кодовое слово, его можно узнать у организатора:"""
 
         await update.message.reply_text(start_message, reply_markup=reply_markup)
         logger.info(f"User {user_id} started the quest")
@@ -234,15 +235,18 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 if(len(point['ad_message'])>0):
                     await update.message.reply_text(point['ad_message'])
 
+                
+                if len(get_user_state(user_id)['found_words'])+3 == len(QUEST_POINTS):
+                    time.sleep(3)
+                    await update.message.reply_text(FINAL_MESSAGE)
+
+
                 # Проверяем, завершен ли квест
                 if check_all_words_found(user_id):
                     time.sleep(3)
                     user_state['finished'] = True
                     finish_time = datetime.now()
                     duration = finish_time - user_state['start_time']
-
-                    # Отправляем финальное сообщение
-                    await update.message.reply_text(FINAL_MESSAGE)
 
                     # Отправляем IT FEST сообщение с фото
                     await send_with_photo(update, IT_FEST_PHOTO_PATH, IT_FEST_MESSAGE)
