@@ -130,7 +130,7 @@ def get_user_state(user_id):
 def check_all_words_found(user_id):
     """Проверить, найдены ли все слова"""
     user_state = get_user_state(user_id)
-    return len(user_state['found_words'])+2 == len(QUEST_POINTS)
+    return len(user_state['found_words'])+1 == len(QUEST_POINTS)
 
 
 async def send_with_photo(update: Update, photo_path: str, caption: str):
@@ -236,7 +236,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     await update.message.reply_text(point['ad_message'])
 
                 
-                if len(get_user_state(user_id)['found_words'])+3 == len(QUEST_POINTS):
+                if len(get_user_state(user_id)['found_words'])+2 == len(QUEST_POINTS):
                     time.sleep(3)
                     await update.message.reply_text(FINAL_MESSAGE)
                 elif check_all_words_found(user_id):
@@ -250,7 +250,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                     logger.info(f"User {user_id} finished the quest in {duration}")
                 else:
-                    remaining = len(QUEST_POINTS) - len(user_state['found_words'])-3
+                    remaining = len(QUEST_POINTS) - len(user_state['found_words'])-2
                     await update.message.reply_text(
                         f"🎯 Отлично! Осталось найти {remaining} слов.\n"
                         f"Продолжайте в том же духе!"
